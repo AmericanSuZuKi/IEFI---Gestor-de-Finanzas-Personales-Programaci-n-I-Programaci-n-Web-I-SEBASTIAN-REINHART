@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor De Finanzas Personales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="flex flex-col w-full bg-gray-950 text-gray-300 items-center py-6 min-h-screen">
+
+    <div class="w-full max-w-4xl space-y-8 px-4">
+
+        <header class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm flex justify-between items-center">
+            <h1 class="text-gray-100 font-bold text-3xl sm:text-4xl">Gestor de Finanzas</h1>
+            <p class="text-gray-100 font-bold text-sm sm:text-base">ISSC-Hackathon</p>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Ingresos Totales</h3>
+                <p id="total-ingresos" class="text-2xl font-extrabold text-emerald-400">$0.00</p>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Gastos Totales</h3>
+                <p id="total-gastos" class="text-2xl font-extrabold text-rose-400">$0.00</p>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Balance Neto</h3>
+                <p id="balance-neto" class="text-2xl font-extrabold text-blue-400">$0.00</p>
+            </div>
+        </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-gray-100 mb-4">Registrar Movimiento</h2>
+
+            <form id="form-transaccion" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="sm:col-span-2">
+                    <label class="block text-gray-400 font-medium mb-1.5 text-sm" for="descripcion">Descripción</label>
+                    <input
+                        class="w-full bg-gray-950 border border-gray-700/60 rounded-lg py-2.5 px-3.5 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text" id="descripcion" placeholder="Descripción del movimiento" required>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-medium mb-1.5 text-sm" for="monto">Monto</label>
+                    <input
+                        class="w-full bg-gray-950 border border-gray-700/60 rounded-lg py-2.5 px-3.5 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="number" id="monto" placeholder="0.00" step="0.01" required>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-medium mb-1.5 text-sm" for="tipo">Tipo</label>
+                    <select
+                        class="w-full bg-gray-950 border border-gray-700/60 rounded-lg py-2.5 px-3.5 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="tipo" required>
+                        <option value="ingreso" class="bg-gray-950">Ingreso</option>
+                        <option value="gasto" class="bg-gray-950">Gasto</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-medium mb-1.5 text-sm" for="fecha">Fecha</label>
+                    <input
+                        class="w-full bg-gray-950 border border-gray-700/60 rounded-lg py-2.5 px-3.5 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="date" id="fecha" required>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-medium mb-1.5 text-sm" for="categoria">Categoría</label>
+                    <select
+                        class="w-full bg-gray-950 border border-gray-700/60 rounded-lg py-2.5 px-3.5 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="categoria" required>
+                        <option value="Sueldo" class="bg-gray-950">Sueldo</option>
+                        <option value="Comida" class="bg-gray-950">Comida</option>
+                        <option value="Transporte" class="bg-gray-950">Transporte</option>
+                        <option value="Entretenimiento" class="bg-gray-950">Entretenimiento</option>
+                        <option value="Salud" class="bg-gray-950">Salud</option>
+                        <option value="Educación" class="bg-gray-950">Educación</option>
+                        <option value="Otros" class="bg-gray-950">Otros</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2 pt-2">
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition shadow-sm cursor-pointer">Registrar
+                        Transacción</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-sm">
+            <h2 class="text-xl font-bold text-gray-100 mb-4">Historial de Movimientos</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full whitespace-nowrap text-left text-gray-400">
+                    <thead class="text-gray-300 border-b border-gray-700/50">
+                        <tr>
+                            <th class="p-4 pl-1 font-semibold">ID</th>
+                            <th class="p-4 pl-1 font-semibold">Fecha</th>
+                            <th class="p-4 pl-1 font-semibold">Descripción</th>
+                            <th class="p-4 pl-1 font-semibold">Categoría</th>
+                            <th class="p-4 pl-1 font-semibold">Tipo</th>
+                            <th class="p-4 pl-1 font-semibold">Monto</th>
+                            <th class="p-4 pl-1 font-semibold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-movimientos" class="divide-gray-700/50 divide-y">
+                        <tr>
+                            <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                                No hay carga financiera registrada.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <section class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6 border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-100">Línea de Tiempo y Evolución de Balance</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Comparativa cronológica de ingresos, gastos y balance neto</p>
+                </div>
+                <span class="inline-flex items-center self-start sm:self-auto px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    Cronología Y Balance
+                </span>
+            </div>
+
+            <div class="w-full overflow-x-auto pb-2">
+                <div class="min-w-[650px] h-80 bg-gray-950/60 border border-gray-800/80 rounded-xl p-4">
+                    <canvas id="grafico-categorias"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Mini Estadística Horizontal por Categoría -->
+        <section class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 border-b border-gray-800 pb-3">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-100">Distribución Horizontal por Categoría</h2>
+                    <p class="text-xs text-gray-400">Montos totales agrupados (Sueldo, Transporte, Comida, etc.)</p>
+                </div>
+                <span class="inline-flex items-center self-start sm:self-auto px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    Resumen por Rubro
+                </span>
+            </div>
+
+            <div class="w-full h-64 bg-gray-950/60 border border-gray-800/80 rounded-xl p-4">
+                <canvas id="grafico-horizontal-categorias"></canvas>
+            </div>
+        </section>
+
+        <footer class="text-center pb-4 text-gray-500 text-sm">
+            <p>&copy; SEBASTIAN REINHART 2026 Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
